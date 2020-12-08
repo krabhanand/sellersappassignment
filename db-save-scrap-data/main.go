@@ -9,8 +9,9 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -25,7 +26,7 @@ func homeLink(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//get mongodb client
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://anand:anand@cluster0.rlk7s.mongodb.net/"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017/"))
 
 	// handle client error
 	if err != nil {
@@ -64,7 +65,7 @@ func homeLink(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Connected to MongoDB!")
 
 	//get collection from required database
-	collection := client.Database("seller-app").Collection("product-data")
+	collection := client.Database("seller_app").Collection("product_data")
 
 	//update timestamp
 	p.UpdatedAt = primitive.Timestamp{T: uint32(time.Now().Unix())}
@@ -132,7 +133,7 @@ func homeLink(w http.ResponseWriter, r *http.Request) {
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", homeLink)
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8888", router))
 }
 
 type Product struct {

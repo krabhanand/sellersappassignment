@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"sellerapps/internal/models"
+	"strings"
 )
 
 //collection := helper.ConnectDB()
@@ -62,7 +63,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//send post request
-	response, err := http.Post("http://localhost:8080/", "application/json; charset=utf-8", bytes.NewBuffer(jsonReq))
+	response, err := http.Post("http://localhost:8888/", "application/json; charset=utf-8", bytes.NewBuffer(jsonReq))
 	// if error in post request
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
@@ -73,8 +74,18 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(errorsend)
 		return
 	} else {
+
 		bodyBytes, _ := ioutil.ReadAll(response.Body)
 		fmt.Println(string(bodyBytes))
+
+		//for if not able to connect to mongodb or any other error
+		if strings.Contains(string(bodyBytes), "error_info") {
+			var errorsend Error
+			json.Unmarshal(bodyBytes, &errorsend)
+			w.WriteHeader(500)
+			json.NewEncoder(w).Encode(errorsend)
+			return
+		}
 		var sendProdInfo models.ProductData
 		json.Unmarshal(bodyBytes, &sendProdInfo)
 		json.NewEncoder(w).Encode(sendProdInfo)
