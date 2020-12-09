@@ -1,7 +1,34 @@
-# sellersappassignment
+# 
+
+how to start the services:
+- open your terminal and do preferably inside /home/<username>/go/* path: git clone https://github.com/krabhanand/sellersappassignment.git
+- next cd into sellersappassignment: cd sellersappassignment
+- make sure docker and docker-compose are installed
+- do: sudo docker-compose up --build
+- wait for everthing to startup and some json data displayed
+- have a look at mongodb data first, open new terminal and look up existing docker containers, type: docker ps
+- copy the container id whose image name is 'mongo:latest'
+- type: docker exec -it <container-id> bash
+- now we are inside docker container that has mongodb server running
+- type : mongo
+- now we are in mongodb shell
+- type: use seller_app
+- type: db.product_data.insertOne({"a":"q"})
+- now data base has been initialized
+  
+now test the service
+- go to postman, type in address "http://localhost:10000/"
+- in params tab enter 'url' as a parameter key and """ https://www.amazon.com/PlayStation-4-Pro-1TB-Console/dp/B01LOP8EZC/  """ as its value(type only the web address, do not type triple inverted commas)(you may type any other amazon.com products web page url)
+- make a post request
+- api functions as given below and relevant data is returned after being stored in the database
+- go to the mongo shell and type : db.product_data.find()
+- you can see the data extracted from the web page of enetered url of amazon products page
+  
+  
+  
 two rest api have been created as mentioned in the assignment document
-db used here is mongodb with it being on the cloud and can be accessed via compass by the use of the link: mongodb+srv://anand:anand@cluster0.rlk7s.mongodb.net/
-the name of the database is 'seller-app', the name of collection is 'product-data'
+db used here is mongodb with it being packaged along with docker
+the name of the database is 'seller_app', the name of collection is 'product_data'
 first api is present in folder appseller,
   - the API in here runs on port 10000.
   - it receives a URL in the query parameter 'url'
@@ -22,11 +49,4 @@ second api is present in the 'db-save-scrap-data' folder,
   - if every thing goes on fine, then json of inserted data(with dummy id) is provided back to the first API
   - if errors occour, then 500 error code along with relevant details is provided
   
- YET TO DO:
- - dockerize both the services
- - combining them both using docker compose file
- 
- ISSUES BEING FACED:
-  - to run docker locally, it seems the requirement is of windows 10 pro edition which is not currently available
-  - due to above becoming difficult to complete the docker portion of the assignment
-  - wish to clarify wether the 2 services need to be converted into microservices or should be lefty as is?
+both apis have been dockerized and canbe started with docker-compose up command
