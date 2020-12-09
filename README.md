@@ -6,6 +6,7 @@ how to start the services:
 - make sure docker and docker-compose are installed
 - do: sudo docker-compose up --build
 - wait for everthing to startup and some json data displayed
+- if mongodb service is running on local machine stop it: sudo systemctl stop mongodb
 - have a look at mongodb data first, open new terminal and look up existing docker containers, type: docker ps
 - copy the container id whose image name is 'mongo:latest'
 - type: docker exec -it <container-id> bash
@@ -41,7 +42,7 @@ first api is present in folder appseller,
   - after receiving response as ok, the data saved in the db(barring the id) along with timestamp which is obtained from the other API is provided to the user for satisfaction
 
 second api is present in the 'db-save-scrap-data' folder,
-  - the API runs on port 8080
+  - the API runs on port 8888
   - it receives JSON data from the first API regarding url and relevant details of the product
   - fresh timestamp is inserted in the model data
   - at first the db is searched for if data with same url has been stored before
