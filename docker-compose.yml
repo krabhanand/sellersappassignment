@@ -1,0 +1,42 @@
+version: '3.4'
+
+# Define services
+services:
+
+  # App Service
+  anandsellersapppapi:
+    # Configuration for building the docker image for the service
+    build:
+      context: ./appseller # Use an image built from the specified dockerfile in the current directory.
+      dockerfile: Dockerfile
+    ports:
+      - "10000:10000" # Forward the exposed port 10000 on the container to port 10000 on the host machine
+    restart: unless-stopped
+    depends_on: 
+      - anandsellersappsapi # This service depends on anandsellersappsapi. Start that first
+    network_mode: host
+
+
+  anandsellersappsapi:
+    build:
+      context: ./db-save-scrap-data # Use an image built from the specified dockerfile in the current directory.
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - "8888:8888" # Forward the exposed port 8888 on the container to port 8888 on the host machine
+    restart: unless-stopped
+    depends_on: 
+      - mymongodb # This service depends on redis. Start that first.  
+    network_mode: host
+  
+
+  # Redis Service   
+  mymongodb:
+    image: "mongo:latest" # Use a public mongo image to build the mongo service    
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    network_mode: host
+
+
+ 

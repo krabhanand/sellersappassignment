@@ -41,7 +41,7 @@ func GetLatestBlogTitles(url string) (models.Product, error) {
 	doc.Find("title").Each(func(i int, s *goquery.Selection) {
 		title += s.Text()
 	})
-	if strings.Contains(title, "Not Found") || !strings.Contains(title, "Amazon.com:") {
+	if strings.Contains(title, "Not Found") || !strings.Contains(title, "Amazon.") {
 		return models.Product{}, errors.New(" this is not an amazon products page")
 	}
 	// Save each .post-title as a list
